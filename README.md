@@ -1,4 +1,4 @@
-# Decor Design Premium V3
+# Decor Design 
 
 Sitio público + panel de administración conectado a Supabase y listo para GitHub Pages.
 
