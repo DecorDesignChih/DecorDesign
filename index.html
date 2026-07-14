@@ -1,157 +1,135 @@
 <!doctype html>
-<html lang="es-MX">
+<html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#2d2d2d">
-  <meta name="description" content="Decor Design en Ciudad Juárez: lambrín, Panel Walnut, placas PVC, papel tapiz y persianas a medida.">
-  <title>Decor Design | Acabados para interiores</title>
+  <meta name="theme-color" content="#252525">
+  <meta name="description" content="Decor Design en Ciudad Juárez: lambrín, Panel Walnut, placas PVC, papel tapiz, persianas a medida y proyectos decorativos.">
+  <meta property="og:title" content="Decor Design | Acabados que transforman">
+  <meta property="og:description" content="Soluciones decorativas premium para hogares y negocios en Ciudad Juárez.">
+  <title>Decor Design | Acabados que transforman</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="site-header" id="inicio">
-    <a class="brand" href="#inicio" aria-label="Decor Design, inicio">
-      <img src="assets/images/logo-symbol.png" alt="Logotipo de Decor Design">
-      <span>DECOR <small>DESIGN</small></span>
+  <div class="announcement">10% de descuento al mostrar nuestra publicidad · Aplican restricciones</div>
+  <header class="site-header" id="siteHeader">
+    <a href="#inicio" class="brand" aria-label="Decor Design inicio">
+      <img src="assets/logo-symbol.png" alt="Logotipo Decor Design">
+      <span><b>DECOR</b><small>DESIGN</small></span>
     </a>
-    <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span><span></span></button>
-    <nav class="nav" aria-label="Navegación principal">
+    <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false">☰</button>
+    <nav id="mainNav">
       <a href="#inicio">Inicio</a>
-      <a href="#nosotros">Nosotros</a>
       <a href="#productos">Productos</a>
-      <a href="#proyectos">Galería</a>
+      <a href="#trabajos">Proyectos</a>
+      <a href="#nosotros">Nosotros</a>
       <a href="#contacto">Contacto</a>
+      <a class="nav-cta" id="topWhatsapp" href="#">Cotizar ahora</a>
     </nav>
-    <a class="header-cta" href="https://wa.me/526563420737?text=Hola%20Decor%20Design,%20quiero%20una%20cotización" target="_blank" rel="noopener">Cotizar ahora</a>
   </header>
 
   <main>
-    <section class="hero">
-      <div class="hero-overlay"></div>
+    <section class="hero" id="inicio">
+      <div class="hero-media"></div>
+      <div class="hero-shade"></div>
       <div class="hero-content reveal">
-        <p class="eyebrow">Acabados que elevan cada espacio</p>
-        <h1>Transformamos <span>tus espacios</span> en algo extraordinario</h1>
-        <p>Lambrín, Panel Walnut, placas PVC, papel tapiz y persianas a medida para proyectos modernos y elegantes.</p>
+        <span class="kicker">ACABADOS · DISEÑO · ELEGANCIA</span>
+        <h1>Espacios que hablan de ti.</h1>
+        <p>Transformamos paredes, habitaciones y negocios con materiales modernos, atención personalizada y acabados que elevan cada ambiente.</p>
         <div class="hero-actions">
-          <a class="btn btn-gold" href="#productos">Ver productos</a>
-          <a class="btn btn-ghost" href="https://wa.me/526563420737?text=Hola%20Decor%20Design,%20quiero%20información" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+          <a href="#productos" class="button primary">Explorar productos</a>
+          <a id="heroWhatsapp" href="#" class="button secondary">Cotizar por WhatsApp</a>
+        </div>
+        <div class="hero-metrics">
+          <div><strong>+6</strong><span>Categorías</span></div>
+          <div><strong>100%</strong><span>Asesoría personalizada</span></div>
+          <div><strong>Jrz.</strong><span>Atención local</span></div>
         </div>
       </div>
-      <aside class="discount-card reveal">
-        <small>Promoción especial</small>
-        <strong>10%</strong>
-        <b>de descuento</b>
-        <span>al mostrar esta página o el video publicitario</span>
-      </aside>
-      <div class="scroll-cue">Desliza para conocer más <span>↓</span></div>
+      <div class="hero-offer"><span>Promoción especial</span><strong>10%</strong><small>de descuento</small></div>
+      <a class="scroll-cue" href="#productos">Descubrir ↓</a>
     </section>
 
-    <section class="trust-strip" aria-label="Ventajas">
-      <article><span>✦</span><div><b>Acabado premium</b><small>Materiales seleccionados</small></div></article>
-      <article><span>◇</span><div><b>Diseño personalizado</b><small>Opciones para cada espacio</small></div></article>
-      <article><span>✓</span><div><b>Atención directa</b><small>Cotización por WhatsApp</small></div></article>
-      <article><span>⌂</span><div><b>Servicio local</b><small>Ciudad Juárez, Chihuahua</small></div></article>
+    <section class="trust-strip">
+      <article><span>01</span><div><b>Diseño asesorado</b><small>Te ayudamos a elegir combinaciones</small></div></article>
+      <article><span>02</span><div><b>Materiales premium</b><small>Opciones modernas y duraderas</small></div></article>
+      <article><span>03</span><div><b>Instalación disponible</b><small>Acabados limpios y profesionales</small></div></article>
+      <article><span>04</span><div><b>Cotización rápida</b><small>Atención directa por WhatsApp</small></div></article>
     </section>
 
-    <section class="section intro" id="nosotros">
+    <section id="productos" class="section products-section">
       <div class="section-heading reveal">
-        <p class="eyebrow">Decor Design</p>
-        <h2>Elegancia moderna con detalles que se sienten</h2>
+        <div><span class="kicker">NUESTRO CATÁLOGO</span><h2>Soluciones que inspiran</h2></div>
+        <p>Selecciona una categoría para descubrir sus modelos, acabados y posibilidades de diseño.</p>
       </div>
-      <div class="intro-grid">
-        <div class="intro-copy reveal">
-          <p>Ayudamos a transformar salas, recámaras, muros de televisión, oficinas y negocios con acabados decorativos de presencia elegante.</p>
-          <p>Te asesoramos para combinar texturas, tonos de madera, mármol y persianas, logrando una propuesta equilibrada para tu espacio.</p>
-          <a class="text-link" href="#contacto">Solicitar asesoría <span>→</span></a>
-        </div>
-        <div class="stats reveal">
-          <div><strong>5+</strong><span>líneas de producto</span></div>
-          <div><strong>2</strong><span>números de atención</span></div>
-          <div><strong>10%</strong><span>promoción vigente</span></div>
-        </div>
+      <div id="categoryGrid" class="category-grid"><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
+    </section>
+
+    <section class="split-story" id="nosotros">
+      <div class="story-image"><img src="assets/trabajo-walnut.jpg" alt="Instalación Decor Design"></div>
+      <div class="story-copy reveal">
+        <span class="kicker">DECOR DESIGN</span>
+        <h2>No vendemos solo materiales. Creamos ambientes.</h2>
+        <p>Cada proyecto comienza con una idea y termina con un espacio que se siente distinto. Combinamos lambrín, placas, papel tapiz, persianas y detalles decorativos para lograr resultados equilibrados y modernos.</p>
+        <ul><li>Asesoría para elegir colores y materiales</li><li>Opciones para hogar, oficina y comercio</li><li>Atención antes, durante y después de tu compra</li></ul>
+        <a id="storyWhatsapp" href="#" class="text-link">Hablar con un asesor →</a>
       </div>
     </section>
 
-    <section class="section products" id="productos">
-      <div class="section-heading centered reveal">
-        <p class="eyebrow">Nuestros productos</p>
-        <h2>Soluciones que inspiran</h2>
-        <p>Selecciona una categoría para pedir modelos, colores, medidas y disponibilidad.</p>
+    <section id="trabajos" class="section projects-section">
+      <div class="section-heading inverse reveal">
+        <div><span class="kicker">PROYECTOS REALES</span><h2>Trabajos que hablan por nosotros</h2></div>
+        <p>Explora instalaciones y transformaciones realizadas para nuestros clientes.</p>
       </div>
-      <div class="product-grid">
-        <article class="product-card reveal" style="--img:url('assets/images/proyecto-lambrin-placa.jpg')">
-          <div><span>01</span><h3>Lambrín</h3><p>Textura y calidez para muros principales.</p><a href="https://wa.me/526563420737?text=Quiero%20ver%20modelos%20de%20lambrín" target="_blank" rel="noopener">Ver modelos →</a></div>
-        </article>
-        <article class="product-card reveal" style="--img:url('assets/images/proyecto-esquina.jpg')">
-          <div><span>02</span><h3>Panel Walnut</h3><p>Apariencia nogal para interiores sofisticados.</p><a href="https://wa.me/526563420737?text=Quiero%20información%20del%20Panel%20Walnut" target="_blank" rel="noopener">Pedir información →</a></div>
-        </article>
-        <article class="product-card reveal" style="--img:url('assets/images/proyecto-placas.jpg')">
-          <div><span>03</span><h3>Placas PVC</h3><p>Acabados tipo mármol modernos y resistentes.</p><a href="https://wa.me/526563420737?text=Quiero%20ver%20modelos%20de%20placas%20PVC" target="_blank" rel="noopener">Ver modelos →</a></div>
-        </article>
-        <article class="product-card reveal muted-card">
-          <div><span>04</span><h3>Papel tapiz</h3><p>Diseños que cambian la personalidad del espacio.</p><a href="https://wa.me/526563420737?text=Quiero%20ver%20catálogo%20de%20papel%20tapiz" target="_blank" rel="noopener">Ver catálogo →</a></div>
-        </article>
-        <article class="product-card reveal light-card">
-          <div><span>05</span><h3>Persianas</h3><p>Fabricación a medida con opciones elegantes.</p><a href="https://wa.me/526563420737?text=Quiero%20cotizar%20persianas%20a%20medida" target="_blank" rel="noopener">Cotizar →</a></div>
-        </article>
-        <article class="product-card reveal green-card">
-          <div><span>06</span><h3>Follaje decorativo</h3><p>Un toque natural para hogares y negocios.</p><a href="https://wa.me/526563420737?text=Quiero%20información%20de%20follaje%20decorativo" target="_blank" rel="noopener">Conocer opciones →</a></div>
-        </article>
-      </div>
+      <div id="projectGrid" class="project-grid"><div class="loading-panel">Cargando proyectos…</div></div>
     </section>
 
-    <section class="section gallery" id="proyectos">
-      <div class="section-heading centered reveal">
-        <p class="eyebrow">Proyectos reales</p>
-        <h2>Inspiración para tu próximo espacio</h2>
-      </div>
-      <div class="gallery-grid">
-        <figure class="gallery-main reveal"><img src="assets/images/proyecto-lambrin-placa.jpg" alt="Muro decorativo con lambrín y placa PVC"><figcaption>Lambrín + placa central</figcaption></figure>
-        <figure class="reveal"><img src="assets/images/proyecto-esquina.jpg" alt="Muro y esquina decorados con placa y lambrín"><figcaption>Composición en esquina</figcaption></figure>
-        <figure class="reveal"><img src="assets/images/proyecto-placas.jpg" alt="Instalación de placas decorativas"><figcaption>Muro completo con placas</figcaption></figure>
-      </div>
+    <section class="cta-band">
+      <div><span class="kicker">TU PRÓXIMO ESPACIO</span><h2>Convierte una pared sencilla en el centro de atención.</h2></div>
+      <a id="ctaWhatsapp" href="#" class="button light">Solicitar cotización</a>
     </section>
 
-    <section class="promo-section">
-      <div class="promo-inner reveal">
-        <div><p class="eyebrow">Promoción Decor Design</p><h2>Recibe 10% de descuento</h2><p>Muestra esta página o el video publicitario al solicitar tu cotización.</p></div>
-        <a class="btn btn-gold" href="https://wa.me/526563420737?text=Hola,%20vi%20la%20promoción%20del%2010%25%20de%20descuento%20y%20quiero%20cotizar" target="_blank" rel="noopener">Aplicar promoción</a>
+    <section id="contacto" class="section contact-section">
+      <div class="contact-copy">
+        <span class="kicker">VISÍTANOS</span>
+        <h2>Hablemos de tu proyecto</h2>
+        <p>Arturo Álvarez 1737, Col. Carlos Chavira Becerra, C.P. 32575, Ciudad Juárez, Chihuahua.</p>
+        <div class="contact-list"><a href="tel:+526563420737">656-342-0737</a><a href="tel:+526563144050">656-314-4050</a><span>Lunes a sábado · 9:00 a.m. – 7:00 p.m.</span></div>
       </div>
-    </section>
-
-    <section class="section contact" id="contacto">
-      <div class="contact-card reveal">
-        <div>
-          <p class="eyebrow">Visítanos o escríbenos</p>
-          <h2>Hagamos realidad tu idea</h2>
-          <p>Cuéntanos qué pared o espacio deseas transformar. Envíanos medidas y una fotografía para orientarte mejor.</p>
-          <div class="contact-list">
-            <a href="https://maps.google.com/?q=Arturo+Alvarez+1737+Carlos+Chavira+Becerra+Ciudad+Juarez+Chihuahua+32575" target="_blank" rel="noopener"><span>⌖</span><div><b>Dirección</b><small>Arturo Álvarez 1737, Col. Carlos Chavira Becerra, C.P. 32575, Ciudad Juárez, Chih.</small></div></a>
-            <a href="tel:+526563420737"><span>☎</span><div><b>Teléfono</b><small>656-342-0737</small></div></a>
-            <a href="tel:+526563144050"><span>☎</span><div><b>Teléfono alterno</b><small>656-314-4050</small></div></a>
-          </div>
-        </div>
-        <form id="quoteForm" class="quote-form">
-          <label>Nombre<input id="name" type="text" placeholder="Tu nombre" required></label>
-          <label>Producto<select id="product"><option>Lambrín</option><option>Panel Walnut</option><option>Placas PVC</option><option>Papel tapiz</option><option>Persianas a medida</option><option>Follaje decorativo</option></select></label>
-          <label>Medidas o mensaje<textarea id="message" rows="4" placeholder="Ejemplo: pared de 3 m de ancho por 2.50 m de alto"></textarea></label>
-          <button class="btn btn-gold" type="submit">Enviar por WhatsApp</button>
-        </form>
+      <div class="contact-card">
+        <span>Atención personalizada</span>
+        <h3>Cuéntanos qué deseas transformar</h3>
+        <p>Envíanos medidas, una fotografía o la idea que tienes. Te orientamos para elegir la mejor opción.</p>
+        <a id="contactWhatsapp" href="#" class="button primary">Enviar mensaje</a>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="footer-brand"><img src="assets/images/logo-decor-design.png" alt="Decor Design"><p>Soluciones decorativas para transformar tus espacios con estilo y elegancia.</p></div>
-    <div><b>Enlaces</b><a href="#inicio">Inicio</a><a href="#productos">Productos</a><a href="#proyectos">Galería</a><a href="#contacto">Contacto</a></div>
-    <div><b>Contacto</b><a href="tel:+526563420737">656-342-0737</a><a href="tel:+526563144050">656-314-4050</a><span>Ciudad Juárez, Chihuahua</span></div>
-    <p class="copyright">© <span id="year"></span> Decor Design. Todos los derechos reservados.</p>
+    <div class="footer-brand"><img src="assets/logo-full.png" alt="Decor Design"><p>Diseño, estilo y calidad para hogares y negocios.</p></div>
+    <div><b>Enlaces</b><a href="#productos">Productos</a><a href="#trabajos">Proyectos</a><a href="#contacto">Contacto</a></div>
+    <div><b>Administración</b><a href="admin.html">Entrar al panel</a><small>© 2026 Decor Design</small></div>
   </footer>
 
-  <a class="whatsapp-float" href="https://wa.me/526563420737?text=Hola%20Decor%20Design,%20quiero%20una%20cotización" target="_blank" rel="noopener" aria-label="Cotizar por WhatsApp">✆</a>
-  <script src="script.js"></script>
+  <a id="floatingWhatsapp" class="floating-whatsapp" href="#" aria-label="Abrir WhatsApp">WA</a>
+
+  <dialog id="modelsModal" class="modal models-modal">
+    <button class="modal-close" aria-label="Cerrar">×</button>
+    <div class="modal-header"><span class="kicker">MODELOS DISPONIBLES</span><h2 id="modalTitle">Categoría</h2><p id="modalDescription"></p></div>
+    <div class="modal-tools"><input id="modelSearch" type="search" placeholder="Buscar modelo…"></div>
+    <div id="modelsGrid" class="models-grid"></div>
+  </dialog>
+
+  <dialog id="projectModal" class="modal project-modal">
+    <button class="modal-close project-close" aria-label="Cerrar">×</button>
+    <div class="project-modal-grid"><img id="projectModalImage" alt="Trabajo realizado"><div><span class="kicker">TRABAJO REALIZADO</span><h2 id="projectModalTitle"></h2><p id="projectModalDescription"></p><a id="projectQuote" href="#" class="button primary">Quiero algo similar</a></div></div>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,11 @@
+DECOR DESIGN PREMIUM V3
+
+1. Descomprime el ZIP.
+2. Sube TODOS los archivos y la carpeta assets a GitHub.
+3. Confirma los cambios.
+4. Espera 1 a 3 minutos.
+5. Abre:
+   https://decordesignchih.github.io/DecorDesign/admin.html
+6. Inicia sesión con tu correo administrador.
+
+No necesitas volver a ejecutar SQL porque ya hiciste correctamente la configuración y el usuario administrador.
