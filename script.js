@@ -1,0 +1,10 @@
+const header=document.querySelector('.site-header');
+const menuBtn=document.querySelector('.menu-toggle');
+const nav=document.querySelector('.nav');
+window.addEventListener('scroll',()=>header.classList.toggle('scrolled',window.scrollY>30));
+menuBtn.addEventListener('click',()=>{const open=nav.classList.toggle('open');menuBtn.setAttribute('aria-expanded',String(open));});
+nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>nav.classList.remove('open')));
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+document.getElementById('year').textContent=new Date().getFullYear();
+document.getElementById('quoteForm').addEventListener('submit',e=>{e.preventDefault();const name=document.getElementById('name').value.trim();const product=document.getElementById('product').value;const message=document.getElementById('message').value.trim();const text=`Hola Decor Design, soy ${name}. Quiero cotizar: ${product}.${message?` Medidas o detalles: ${message}`:''}`;window.open(`https://wa.me/526563420737?text=${encodeURIComponent(text)}`,'_blank','noopener');});
