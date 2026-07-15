@@ -251,3 +251,367 @@ main,.section,.benefits,.story,.projects-section,.contact,footer{
 @media(prefers-reduced-motion:reduce){
   .hero-slide{transition:opacity .25s linear;transform:none!important}
 }
+
+
+/* ==========================================================
+   CORRECCIÓN DEFINITIVA
+   Imágenes incrustadas en index.html: no dependen de /assets.
+   ========================================================== */
+.hero{
+  min-height:760px;
+}
+.hero-slideshow{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  background:#15110d;
+}
+.hero-slide{
+  position:absolute;
+  inset:0;
+  opacity:0;
+  overflow:hidden;
+  transform:none;
+  transition:opacity 1.25s ease;
+}
+.hero-slide.active{
+  opacity:1;
+  transform:none;
+}
+.hero-slide-blur,
+.hero-slide-main{
+  position:absolute;
+  display:block;
+}
+.hero-slide-blur{
+  inset:-38px;
+  width:calc(100% + 76px);
+  height:calc(100% + 76px);
+  object-fit:cover;
+  object-position:var(--work-position, center);
+  filter:blur(24px) brightness(.47) saturate(.92);
+  transform:scale(1.05);
+}
+.hero-slide-main{
+  top:0;
+  right:0;
+  width:60%;
+  height:100%;
+  object-fit:contain;
+  object-position:center;
+  filter:brightness(.93) contrast(1.05) saturate(1.02);
+  transform:scale(1.015);
+  transition:transform 6.4s ease;
+}
+.hero-slide.active .hero-slide-main{
+  transform:scale(1.055);
+}
+.hero-overlay{
+  background:
+    linear-gradient(90deg,
+      rgba(3,3,3,.94) 0%,
+      rgba(3,3,3,.87) 29%,
+      rgba(3,3,3,.65) 47%,
+      rgba(3,3,3,.22) 68%,
+      rgba(3,3,3,.03) 100%),
+    linear-gradient(0deg,rgba(3,3,3,.64) 0%,transparent 42%)!important;
+}
+.hero-content{
+  width:min(720px,48vw);
+  margin-left:max(5vw,34px);
+}
+.hero-content h1{
+  font-size:clamp(3.2rem,5.2vw,5.55rem);
+  max-width:760px;
+}
+.hero-content p{
+  max-width:620px;
+}
+.hero-dots{
+  bottom:24px;
+  right:34px;
+}
+
+/* Misión, visión y ubicación */
+.identity-section{
+  max-width:var(--max);
+  margin:7rem auto;
+  display:grid;
+  grid-template-columns:.82fr 1.18fr;
+  min-height:720px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  background:rgba(15,15,15,.94);
+  box-shadow:0 30px 90px rgba(0,0,0,.38);
+}
+.identity-visual{
+  position:relative;
+  min-height:720px;
+  overflow:hidden;
+  background:#18120d;
+}
+.identity-visual::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(0deg,rgba(0,0,0,.78),transparent 45%);
+}
+.identity-visual img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+}
+.identity-visual-caption{
+  position:absolute;
+  z-index:2;
+  left:28px;
+  right:28px;
+  bottom:28px;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(1.55rem,2.4vw,2.55rem);
+  line-height:1.15;
+}
+.identity-copy{
+  padding:clamp(2.2rem,5vw,5.5rem);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.identity-copy h2{
+  font-size:clamp(2.5rem,4.7vw,4.8rem);
+}
+.identity-intro{
+  color:var(--muted);
+  max-width:760px;
+  margin:1.3rem 0 2rem;
+}
+.identity-cards{
+  display:grid;
+  gap:.85rem;
+}
+.identity-cards article{
+  position:relative;
+  padding:1.25rem 1.35rem 1.25rem 4rem;
+  border:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(135deg,rgba(255,255,255,.035),rgba(201,151,67,.045));
+}
+.identity-cards article>span{
+  position:absolute;
+  left:1.25rem;
+  top:1.38rem;
+  color:var(--gold2);
+  font-weight:700;
+  font-size:.78rem;
+}
+.identity-cards h3{
+  font-size:1.55rem;
+  margin:0 0 .35rem;
+}
+.identity-cards p{
+  color:var(--muted);
+  margin:0;
+}
+.identity-cards .text-link{
+  display:inline-block;
+  margin-top:.7rem;
+}
+.identity-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.8rem;
+  margin-top:1.6rem;
+}
+.identity-actions .button{
+  width:auto;
+}
+
+@media(max-width:1050px){
+  .hero-slide-main{
+    width:57%;
+  }
+  .hero-content{
+    width:min(650px,53vw);
+  }
+  .identity-section{
+    margin:5rem 20px;
+  }
+}
+@media(max-width:900px){
+  .hero{
+    min-height:810px;
+  }
+  .hero-slide-blur{
+    display:none;
+  }
+  .hero-slide-main{
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:var(--work-position,center);
+    transform:scale(1.02);
+  }
+  .hero-slide.active .hero-slide-main{
+    transform:scale(1.07);
+  }
+  .hero-overlay{
+    background:
+      linear-gradient(0deg,
+        rgba(3,3,3,.93) 0%,
+        rgba(3,3,3,.72) 50%,
+        rgba(3,3,3,.30) 100%),
+      linear-gradient(90deg,rgba(3,3,3,.44),rgba(3,3,3,.10))!important;
+  }
+  .hero-content{
+    width:calc(100% - 42px);
+    margin:0 21px;
+    align-self:end;
+    padding:7rem 0 7rem;
+  }
+  .hero-content h1{
+    font-size:clamp(3rem,10vw,5.1rem);
+  }
+  .identity-section{
+    grid-template-columns:1fr;
+  }
+  .identity-visual{
+    min-height:470px;
+  }
+}
+@media(max-width:620px){
+  .hero{
+    min-height:790px;
+  }
+  .hero-content h1{
+    font-size:3.15rem;
+  }
+  .identity-section{
+    margin:4rem 14px;
+  }
+  .identity-visual{
+    min-height:390px;
+  }
+  .identity-copy{
+    padding:2rem 1.25rem;
+  }
+  .identity-cards article{
+    padding-left:3.55rem;
+  }
+  .identity-actions{
+    flex-direction:column;
+  }
+  .identity-actions .button{
+    width:100%;
+  }
+}
+
+
+/* ==========================================================
+   MARQUESINA ANIMADA — DECOR DESIGN CHIH
+   ========================================================== */
+.decor-marquee{
+  position:relative;
+  z-index:20;
+  overflow:hidden;
+  border-top:1px solid rgba(201,151,67,.20);
+  border-bottom:1px solid rgba(201,151,67,.28);
+  background:
+    linear-gradient(90deg,rgba(16,16,14,.98),rgba(25,22,17,.98),rgba(16,16,14,.98));
+  box-shadow:0 10px 28px rgba(0,0,0,.24);
+}
+.decor-marquee::before,
+.decor-marquee::after{
+  content:"";
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:90px;
+  z-index:3;
+  pointer-events:none;
+}
+.decor-marquee::before{
+  left:0;
+  background:linear-gradient(90deg,#11110f,transparent);
+}
+.decor-marquee::after{
+  right:0;
+  background:linear-gradient(270deg,#11110f,transparent);
+}
+.decor-marquee-viewport{
+  overflow:hidden;
+  width:100%;
+}
+.decor-marquee-track{
+  display:flex;
+  width:max-content;
+  min-width:200%;
+  animation:decorMarqueeMove 32s linear infinite;
+  will-change:transform;
+}
+.decor-marquee:hover .decor-marquee-track{
+  animation-play-state:paused;
+}
+.decor-marquee-group{
+  display:flex;
+  align-items:center;
+  flex-shrink:0;
+  gap:1.2rem;
+  padding:1rem 1.2rem;
+}
+.decor-marquee-item{
+  white-space:nowrap;
+  color:rgba(225,198,137,.90);
+  font-family:"Playfair Display",serif;
+  font-size:clamp(1rem,1.45vw,1.35rem);
+  font-style:italic;
+  font-weight:600;
+  letter-spacing:.035em;
+  text-shadow:0 1px 12px rgba(201,151,67,.14);
+}
+.decor-marquee-star{
+  color:var(--gold2);
+  font-size:.82rem;
+  opacity:.95;
+  filter:drop-shadow(0 0 7px rgba(240,207,135,.30));
+}
+
+@keyframes decorMarqueeMove{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+@media(max-width:900px){
+  .decor-marquee-group{
+    gap:.9rem;
+    padding:.8rem .9rem;
+  }
+  .decor-marquee-track{
+    animation-duration:26s;
+  }
+  .decor-marquee::before,
+  .decor-marquee::after{
+    width:46px;
+  }
+}
+@media(max-width:620px){
+  .decor-marquee-item{
+    font-size:1rem;
+  }
+  .decor-marquee-track{
+    animation-duration:22s;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .decor-marquee-track{
+    animation:none;
+    transform:none;
+  }
+  .decor-marquee-viewport{
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .decor-marquee-viewport::-webkit-scrollbar{
+    display:none;
+  }
+}
