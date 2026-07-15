@@ -1,0 +1,30 @@
+DECOR DESIGN — PARCHE EXCLUSIVO PARA CELULAR
+
+Este paquete NO reemplaza tu página principal.
+Solo corrige el panel de administración que aparecía negro en iPhone.
+
+ARCHIVOS QUE DEBES REEMPLAZAR:
+- admin.html
+- admin.css
+- admin.js
+- carpeta assets (solo agrega los archivos incluidos)
+
+NO BORRES:
+- index.html
+- style.css
+- app.js
+- config.js
+- tus otras imágenes
+- ningún archivo SQL
+
+NO MODIFIQUES SUPABASE.
+
+La causa principal era que admin.html estaba dañado y tenía el inicio de sesión mezclado dentro de otra etiqueta.
+También tenía imágenes enormes incrustadas dentro de HTML y JavaScript, lo que podía bloquear Safari.
+
+Después de subir:
+1. Haz Commit changes.
+2. Espera 1–3 minutos.
+3. En iPhone abre directamente:
+   https://decordesignchih.github.io/DecorDesign/admin.html?v=mobile-final-1
+4. Ábrelo en Safari, no dentro de Facebook o WhatsApp.
