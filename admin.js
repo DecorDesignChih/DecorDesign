@@ -1,4 +1,25 @@
-(() => {
+(function () {
+  'use strict';
+
+  function byId(id){ return document.getElementById(id); }
+  function makeUuid(){
+    if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+      return window.makeUuid();
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
+      var r = Math.random() * 16 | 0;
+      var v = c === 'x' ? r : (r & 3 | 8);
+      return v.toString(16);
+    });
+  }
+  function showBoot(text, isError){
+    var box = byId('mobileBootMessage');
+    if (!box) return;
+    box.textContent = text || '';
+    box.className = isError ? 'mobile-boot-message error' : 'mobile-boot-message';
+    box.style.display = text ? 'block' : 'none';
+  }
+
   const cfg=window.DECOR_CONFIG||{};
   const sb=supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY);
   const bucket=cfg.STORAGE_BUCKET||"decor-images";
@@ -45,15 +66,65 @@
   const toast=m=>{const t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500)};
   const message=(form,text,error=true)=>{const el=form.querySelector(".form-message");el.textContent=text;el.style.color=error?"#ffb0b0":"#a9e6b2"};
 
+
+  function openDialog(id){
+    var dialog = byId(id);
+    if(!dialog) return;
+    if(typeof dialog.showModal === 'function'){
+      dialog.showModal();
+    }else{
+      dialog.setAttribute('open','');
+      dialog.classList.add('dialog-fallback-open');
+    }
+  }
+  function closeDialog(dialog){
+    if(!dialog) return;
+    if(typeof dialog.close === 'function') dialog.close();
+    else{
+      dialog.removeAttribute('open');
+      dialog.classList.remove('dialog-fallback-open');
+    }
+  }
   async function init(){
-    const {data:{session}}=await sb.auth.getSession();
-    if(session)await enter();
-    sb.auth.onAuthStateChange((_e,s)=>{if(!s){$("dashboard").classList.add("hidden");$("authView").classList.remove("hidden")}});
+    try{
+      var authView = byId('authView');
+      var dashboard = byId('dashboard');
+      if(authView) authView.classList.remove('hidden');
+      if(dashboard) dashboard.classList.add('hidden');
+
+      if(typeof window.supabase === 'undefined'){
+        showBoot('No se cargó la conexión del panel. Actualiza Safari e inténtalo nuevamente.', true);
+        return;
+      }
+
+      showBoot('Conectando con Decor Design…', false);
+      var result = await sb.auth.getSession();
+      var session = result && result.data ? result.data.session : null;
+
+      if(session){
+        await enter();
+      }else{
+        showBoot('', false);
+      }
+
+      sb.auth.onAuthStateChange(function(_event, currentSession){
+        if(!currentSession){
+          if(dashboard) dashboard.classList.add('hidden');
+          if(authView) authView.classList.remove('hidden');
+          showBoot('', false);
+        }
+      });
+    }catch(error){
+      console.error('Error al iniciar panel:', error);
+      showBoot('No se pudo iniciar el panel. Cierra esta pestaña y vuelve a abrirla en Safari.', true);
+      var authView = byId('authView');
+      if(authView) authView.classList.remove('hidden');
+    }
   }
   async function enter(){
     const {data,error}=await sb.rpc("is_admin");
     if(error||!data){await sb.auth.signOut();$("loginMessage").textContent="Usuario no autorizado.";return}
-    $("authView").classList.add("hidden");$("dashboard").classList.remove("hidden");await loadAll();
+    $("authView").classList.add("hidden");$("dashboard").classList.remove("hidden");showBoot("",false);await loadAll();
   }
   $("loginForm").addEventListener("submit",async e=>{
     e.preventDefault();$("loginMessage").textContent="Entrando…";
@@ -67,7 +138,7 @@
     b.classList.add("active");$(b.dataset.tab+"Panel").classList.add("active");
   }));
   document.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>openEmpty(b.dataset.open)));
-  document.querySelectorAll(".dialog-close").forEach(b=>b.addEventListener("click",()=>b.closest("dialog").close()));
+  document.querySelectorAll(".dialog-close").forEach(b=>b.addEventListener("click",()=>closeDialog(b.closest("dialog"))));
 
   async function loadAll(){
     const [c,s,p,j]=await Promise.all([
@@ -147,10 +218,10 @@
     d.showModal();
   }
   function edit(type,id){
-    if(type==="category"){const x=categories.find(v=>v.id===id);$("categoryId").value=x.id;$("categoryName").value=x.name;$("categoryDescription").value=x.description||"";$("categoryOrder").value=x.sort_order||0;$("categoryActive").checked=x.active;$("categoryPreview").innerHTML=x.image_url?`<img src="${x.image_url}">`:"";$("categoryDialog").showModal()}
-    if(type==="subcategory"){const x=subcategories.find(v=>v.id===id);$("subcategoryId").value=x.id;$("subcategoryCategory").value=x.category_id;$("subcategoryName").value=x.name;$("subcategoryDescription").value=x.description||"";$("subcategoryOrder").value=x.sort_order||0;$("subcategoryActive").checked=x.active;$("subcategoryPreview").innerHTML=x.image_url?`<img src="${x.image_url}">`:"";$("subcategoryDialog").showModal()}
-    if(type==="product"){const x=products.find(v=>v.id===id);$("productId").value=x.id;$("productCategory").value=x.category_id;updateProductSubs(x.subcategory_id);$("productName").value=x.name;$("productDescription").value=x.description||"";$("productPrice").value=x.price??"";$("productOrder").value=x.sort_order||0;$("productActive").checked=x.active;$("productPreview").innerHTML=x.image_url?`<img src="${x.image_url}">`:"";$("productDialog").showModal()}
-    if(type==="project"){const x=projects.find(v=>v.id===id);$("projectId").value=x.id;$("projectTitle").value=x.title;$("projectDescription").value=x.description||"";$("projectOrder").value=x.sort_order||0;$("projectActive").checked=x.active;$("projectPreview").innerHTML=x.image_url?`<img src="${x.image_url}">`:"";$("projectDialog").showModal()}
+    if(type==="category"){const x=categories.find(v=>v.id===id);$("categoryId").value=x.id;$("categoryName").value=x.name;$("categoryDescription").value=x.description||"";$("categoryOrder").value=x.sort_order||0;$("categoryActive").checked=x.active;$("categoryPreview").innerHTML=x.image_url?`<img src="${x.image_url}">`:"";openDialog("categoryDialog")}
+    if(type==="subcategory"){const x=subcategories.find(v=>v.id===id);$("subcategoryId").value=x.id;$("subcategoryCategory").value=x.category_id;$("subcategoryName").value=x.name;$("subcategoryDescription").value=x.description||"";$("subcategoryOrder").value=x.sort_order||0;$("subcategoryActive").checked=x.active;$("subcategoryPreview").innerHTML=x.image_url?`<img src="${x.image_url}">`:"";openDialog("subcategoryDialog")}
+    if(type==="product"){const x=products.find(v=>v.id===id);$("productId").value=x.id;$("productCategory").value=x.category_id;updateProductSubs(x.subcategory_id);$("productName").value=x.name;$("productDescription").value=x.description||"";$("productPrice").value=x.price??"";$("productOrder").value=x.sort_order||0;$("productActive").checked=x.active;$("productPreview").innerHTML=x.image_url?`<img src="${x.image_url}">`:"";openDialog("productDialog")}
+    if(type==="project"){const x=projects.find(v=>v.id===id);$("projectId").value=x.id;$("projectTitle").value=x.title;$("projectDescription").value=x.description||"";$("projectOrder").value=x.sort_order||0;$("projectActive").checked=x.active;$("projectPreview").innerHTML=x.image_url?`<img src="${x.image_url}">`:"";openDialog("projectDialog")}
   }
   async function upload(file,folder){
     if(!file)return null;
@@ -159,7 +230,7 @@
     const {data:{session}}=await sb.auth.getSession();
     if(!session)throw new Error("Tu sesión terminó. Vuelve a iniciar sesión.");
     const ext=(file.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"");
-    const path=`${folder}/${Date.now()}-${crypto.randomUUID()}.${ext}`;
+    const path=`${folder}/${Date.now()}-${makeUuid()}.${ext}`;
     const {error}=await sb.storage.from(bucket).upload(path,file,{
       cacheControl:"3600",
       upsert:false,
@@ -174,7 +245,7 @@
   async function save(form,table,id,payload,file,folder,dialog){
     try{message(form,"Guardando…",false);if(file)payload.image_url=await upload(file,folder);
       const {error}=await(id?sb.from(table).update(payload).eq("id",id):sb.from(table).insert(payload));
-      if(error)throw error;dialog.close();toast("Guardado");await loadAll()
+      if(error)throw error;closeDialog(dialog);toast("Guardado");await loadAll()
     }catch(e){console.error(e);message(form,e.message||"No se pudo guardar.")}
   }
   $("categoryForm").addEventListener("submit",e=>{e.preventDefault();save(e.currentTarget,"categories",$("categoryId").value,{name:$("categoryName").value.trim(),description:$("categoryDescription").value.trim()||null,sort_order:Number($("categoryOrder").value)||0,active:$("categoryActive").checked},$("categoryImage").files[0],"categories",$("categoryDialog"))});
