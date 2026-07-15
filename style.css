@@ -182,3 +182,72 @@ main,.section,.benefits,.story,.projects-section,.contact,footer{
   .brand b{font-size:1.02rem!important}
   .brand small{font-size:.5rem!important;letter-spacing:.18em!important}
 }
+
+/* FONDO FINAL: carrusel con los cinco trabajos enviados */
+.hero-slideshow{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  background:#080808;
+}
+.hero-slide{
+  position:absolute;
+  inset:-2%;
+  opacity:0;
+  background-image:var(--hero-desktop);
+  background-size:cover;
+  background-position:center;
+  transform:scale(1.035);
+  transition:opacity 1.45s ease,transform 6.8s ease;
+  will-change:opacity,transform;
+}
+.hero-slide.active{
+  opacity:1;
+  transform:scale(1.075);
+}
+.hero-overlay{
+  z-index:1!important;
+  background:
+    linear-gradient(90deg,rgba(3,3,3,.78) 0%,rgba(3,3,3,.60) 40%,rgba(3,3,3,.15) 78%,rgba(3,3,3,.08) 100%),
+    linear-gradient(0deg,rgba(5,5,5,.70) 0%,transparent 48%)!important;
+}
+.hero-content,.offer-card,.hero-dots{z-index:3!important}
+.hero-dots{
+  position:absolute;
+  right:5vw;
+  bottom:3.1vw;
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+.hero-dots span{
+  width:8px;
+  height:8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.40);
+  transition:.35s ease;
+  box-shadow:0 1px 8px rgba(0,0,0,.4);
+}
+.hero-dots span.active{
+  width:27px;
+  background:var(--gold2);
+}
+@media(max-width:900px){
+  .hero-slide{
+    background-image:var(--hero-mobile);
+    background-position:center;
+  }
+  .hero-overlay{
+    background:
+      linear-gradient(0deg,rgba(3,3,3,.83) 0%,rgba(3,3,3,.48) 62%,rgba(3,3,3,.24) 100%),
+      linear-gradient(90deg,rgba(3,3,3,.54),rgba(3,3,3,.16))!important;
+  }
+  .hero-dots{right:24px;bottom:24px}
+}
+@media(max-width:620px){
+  .hero-slide{inset:0}
+  .hero-dots{left:20px;right:auto;bottom:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-slide{transition:opacity .25s linear;transform:none!important}
+}
