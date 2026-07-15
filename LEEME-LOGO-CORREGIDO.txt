@@ -1,0 +1,9 @@
+DECOR DESIGN — LOGO DEL PANEL CORREGIDO
+
+El logo está incrustado directamente dentro de admin.html.
+Ya no depende de la carpeta assets ni de una ruta que pueda fallar.
+
+Sube TODO este ZIP a GitHub reemplazando los archivos anteriores.
+
+Después abre:
+https://decordesignchih.github.io/DecorDesign/admin.html?v=20260715-logo-embedded-final
