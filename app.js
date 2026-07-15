@@ -1,25 +1,4 @@
 (() => {
-  function universalUuid(){
-    if(window.crypto && typeof window.crypto.randomUUID === "function"){
-      return window.universalUuid();
-    }
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(c){
-      const r=Math.random()*16|0;
-      const v=c==="x"?r:(r&3|8);
-      return v.toString(16);
-    });
-  }
-  function openModal(dialog){
-    if(!dialog)return;
-    if(typeof dialog.showModal===openModal("function")dialog);
-    else{dialog.setAttribute("open","");dialog.classList.add("dialog-fallback-open");}
-  }
-  function closeModal(dialog){
-    if(!dialog)return;
-    if(typeof dialog.close===closeModal("function")dialog);
-    else{dialog.removeAttribute("open");dialog.classList.remove("dialog-fallback-open");}
-  }
-
   const cfg = window.DECOR_CONFIG || {};
   const sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
   const fallbackImage = "assets/hero.jpg";
@@ -164,11 +143,11 @@
     grid.querySelectorAll(".subcategory-card").forEach(card =>
       card.addEventListener("click",()=>{
         const sub=list.find(s=>s.id===card.dataset.id);
-        closeModal(document.getElementById("subcategoriesModal"));
+        document.getElementById("subcategoriesModal").close();
         openProducts(categoryId,sub.id,sub.name,sub.description||"");
       })
     );
-    openModal(document.getElementById("subcategoriesModal"));
+    document.getElementById("subcategoriesModal").showModal();
   }
 
   function openProducts(categoryId,subcategoryId,title,description){
@@ -179,7 +158,7 @@
     document.getElementById("modalCategoryTitle").textContent=title;
     document.getElementById("modalCategoryDescription").textContent=description;
     renderProducts(list);
-    openModal(document.getElementById("productsModal"));
+    document.getElementById("productsModal").showModal();
     const search=document.getElementById("productSearch");
     search.value="";
     search.oninput=()=>{
@@ -215,12 +194,12 @@
       document.getElementById("projectModalTitle").textContent=p.title;
       document.getElementById("projectModalDescription").textContent=p.description||"";
       document.getElementById("projectQuote").href=wa(`Hola, quiero un proyecto parecido a: ${p.title}.`);
-      openModal(document.getElementById("projectModal"));
+      document.getElementById("projectModal").showModal();
     }));
   }
 
-  document.getElementById("closeSubcategoriesModal")?.addEventListener("click",()=>closeModal(document.getElementById("subcategoriesModal")));
-  document.getElementById("closeProductsModal")?.addEventListener("click",()=>closeModal(document.getElementById("productsModal")));
-  document.getElementById("closeProjectModal")?.addEventListener("click",()=>closeModal(document.getElementById("projectModal")));
+  document.getElementById("closeSubcategoriesModal")?.addEventListener("click",()=>document.getElementById("subcategoriesModal").close());
+  document.getElementById("closeProductsModal")?.addEventListener("click",()=>document.getElementById("productsModal").close());
+  document.getElementById("closeProjectModal")?.addEventListener("click",()=>document.getElementById("projectModal").close());
   loadData();
 })();
