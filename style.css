@@ -95,3 +95,56 @@ footer{border-top:1px solid rgba(255,255,255,.09);max-width:var(--max);margin:au
 .subcategory-card p{color:var(--muted);margin:0 0 .8rem}
 @media(max-width:900px){.subcategory-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.subcategory-grid{grid-template-columns:1fr}}
+
+/* Fondo decorativo premium de Decor Design */
+body{
+  position:relative;
+  isolation:isolate;
+  background:
+    radial-gradient(circle at 15% 8%, rgba(201,151,67,.11), transparent 28rem),
+    radial-gradient(circle at 88% 30%, rgba(201,151,67,.08), transparent 25rem),
+    linear-gradient(135deg,#080808 0%,#11100e 45%,#090909 100%);
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-2;
+  pointer-events:none;
+  opacity:.34;
+  background-image:
+    linear-gradient(30deg, rgba(201,151,67,.08) 12%, transparent 12.5%, transparent 87%, rgba(201,151,67,.08) 87.5%),
+    linear-gradient(150deg, rgba(201,151,67,.08) 12%, transparent 12.5%, transparent 87%, rgba(201,151,67,.08) 87.5%),
+    linear-gradient(30deg, rgba(201,151,67,.08) 12%, transparent 12.5%, transparent 87%, rgba(201,151,67,.08) 87.5%),
+    linear-gradient(150deg, rgba(201,151,67,.08) 12%, transparent 12.5%, transparent 87%, rgba(201,151,67,.08) 87.5%),
+    linear-gradient(60deg, rgba(255,255,255,.025) 25%, transparent 25.5%, transparent 75%, rgba(255,255,255,.025) 75%);
+  background-size:80px 140px;
+  background-position:0 0,0 0,40px 70px,40px 70px,0 0;
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg, transparent 0 48%, rgba(255,255,255,.018) 49%, transparent 50%),
+    repeating-linear-gradient(90deg, transparent 0 190px, rgba(201,151,67,.025) 191px 192px);
+}
+main,.section,.benefits,.story,.projects-section,.contact,footer{
+  position:relative;
+}
+.section:not(.projects-section){
+  background:linear-gradient(180deg,rgba(11,11,11,.78),rgba(11,11,11,.92));
+  backdrop-filter:blur(2px);
+}
+.products-section,.contact-section{
+  border-left:1px solid rgba(201,151,67,.08);
+  border-right:1px solid rgba(201,151,67,.08);
+}
+.site-header .brand img,
+.footer-brand img,
+.admin-brand img,
+.auth-card img{
+  filter:drop-shadow(0 6px 12px rgba(201,151,67,.28));
+}
