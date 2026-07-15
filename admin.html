@@ -1,12 +1,131 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#202020"><title>Panel de administración | Decor Design</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="admin.css"></head><body>
-<section id="loginView" class="login-view"><div class="login-art"><div><img src="assets/logo-full.png" alt="Decor Design"><h2>Tu catálogo, siempre actualizado.</h2><p>Administra categorías, modelos y trabajos realizados desde un solo lugar.</p></div></div><form id="loginForm" class="login-card"><span class="eyebrow">ACCESO PRIVADO</span><h1>Panel de administración</h1><p>Inicia sesión con la cuenta autorizada en Supabase.</p><label>Correo electrónico<input id="email" type="email" required autocomplete="email" placeholder="correo@ejemplo.com"></label><label>Contraseña<input id="password" type="password" required autocomplete="current-password" placeholder="••••••••"></label><button type="submit">Entrar al panel</button><div id="loginMessage" class="message"></div><a href="index.html">← Volver a la página pública</a></form></section>
-<section id="adminView" class="admin-shell hidden"><aside class="sidebar"><div class="admin-brand"><img src="assets/logo-symbol.png"><span><b>DECOR</b><small>ADMINISTRACIÓN</small></span></div><nav><button data-tab="dashboard" class="active"><i>⌂</i>Resumen</button><button data-tab="categories"><i>◫</i>Categorías</button><button data-tab="products"><i>◇</i>Productos</button><button data-tab="projects"><i>▣</i>Trabajos realizados</button></nav><div class="sidebar-bottom"><a href="index.html" target="_blank">Ver página pública ↗</a><button id="logoutBtn">Cerrar sesión</button></div></aside><main class="admin-main"><header class="admin-header"><div><span class="eyebrow">DECOR DESIGN</span><h1 id="pageTitle">Resumen</h1></div><div class="admin-user"><span id="adminEmail"></span><div class="avatar">DD</div></div></header><div id="toast" class="toast"></div>
-<section id="dashboard" class="tab active"><div class="stats"><article><span>Categorías</span><b id="countCategories">0</b><small>colecciones publicadas</small></article><article><span>Productos</span><b id="countProducts">0</b><small>modelos registrados</small></article><article><span>Proyectos</span><b id="countProjects">0</b><small>trabajos realizados</small></article></div><div class="dashboard-grid"><article class="welcome-card"><span class="eyebrow">BIENVENIDO</span><h2>Tu contenido, bajo control.</h2><p>Los cambios que realices aquí aparecen automáticamente en la página pública. Usa el botón de vista previa para revisar el resultado.</p><a href="index.html" target="_blank">Abrir página pública →</a></article><article class="quick-card"><h3>Acciones rápidas</h3><button data-open="categoryModal">+ Nueva categoría</button><button data-open="productModal">+ Nuevo producto</button><button data-open="projectFormModal">+ Nuevo trabajo</button></article></div></section>
-<section id="categories" class="tab"><div class="toolbar"><div><input id="categorySearch" type="search" placeholder="Buscar categoría…"></div><button data-open="categoryModal">+ Nueva categoría</button></div><div id="categoryAdminGrid" class="admin-grid"></div></section>
-<section id="products" class="tab"><div class="toolbar"><div><input id="productSearch" type="search" placeholder="Buscar producto…"><select id="productCategoryFilter"><option value="">Todas las categorías</option></select></div><button data-open="productModal">+ Nuevo producto</button></div><div id="productAdminGrid" class="admin-grid"></div></section>
-<section id="projects" class="tab"><div class="toolbar"><div><input id="projectSearch" type="search" placeholder="Buscar trabajo…"></div><button data-open="projectFormModal">+ Nuevo trabajo</button></div><div id="projectAdminGrid" class="admin-grid"></div></section>
-</main></section>
-<dialog id="categoryModal"><form id="categoryForm" class="dialog-form"><button type="button" class="close">×</button><span class="eyebrow">CATÁLOGO</span><h2>Categoría</h2><input type="hidden" name="id"><label>Nombre<input name="name" required placeholder="Ej. Panel Walnut"></label><label>Descripción<textarea name="description" placeholder="Describe brevemente la categoría"></textarea></label><div class="form-row"><label>Orden<input name="sort_order" type="number" value="0"></label><label class="file-field">Imagen<input name="image" type="file" accept="image/*"><span>Seleccionar archivo</span></label></div><img class="image-preview" alt="Vista previa"><label class="switch"><input name="active" type="checkbox" checked><span></span>Mostrar en la página</label><button type="submit">Guardar categoría</button></form></dialog>
-<dialog id="productModal"><form id="productForm" class="dialog-form"><button type="button" class="close">×</button><span class="eyebrow">MODELOS</span><h2>Producto / modelo</h2><input type="hidden" name="id"><label>Nombre<input name="name" required placeholder="Ej. Walnut Natural W-01"></label><label>Categoría<select name="category_id" required></select></label><label>Descripción<textarea name="description" placeholder="Medidas, color, acabado o características"></textarea></label><div class="form-row"><label>Precio opcional<input name="price" type="number" step="0.01" placeholder="0.00"></label><label>Orden<input name="sort_order" type="number" value="0"></label></div><label class="file-field">Fotografía<input name="image" type="file" accept="image/*"><span>Seleccionar fotografía</span></label><img class="image-preview" alt="Vista previa"><label class="switch"><input name="active" type="checkbox" checked><span></span>Mostrar en la página</label><button type="submit">Guardar producto</button></form></dialog>
-<dialog id="projectFormModal"><form id="projectForm" class="dialog-form"><button type="button" class="close">×</button><span class="eyebrow">PORTAFOLIO</span><h2>Trabajo realizado</h2><input type="hidden" name="id"><label>Título<input name="title" required placeholder="Ej. Sala con Panel Walnut"></label><label>Descripción<textarea name="description" placeholder="Cuenta qué se instaló y cómo quedó"></textarea></label><div class="form-row"><label>Orden<input name="sort_order" type="number" value="0"></label><label class="file-field">Fotografía<input name="image" type="file" accept="image/*"><span>Seleccionar fotografía</span></label></div><img class="image-preview" alt="Vista previa"><label class="switch"><input name="active" type="checkbox" checked><span></span>Mostrar en la página</label><button type="submit">Guardar trabajo</button></form></dialog>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="admin.js"></script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Panel Decor Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <main class="admin-shell">
+    <section id="setupWarning" class="warning hidden"><b>Falta conectar Supabase.</b><span>Abre <code>config.js</code> y pega Project URL y anon public key.</span></section>
+
+    <section id="authView" class="auth-card">
+      <img src="assets/logo-symbol.png" alt="Decor Design">
+      <span>ADMINISTRACIÓN</span><h1>Panel Decor Design</h1>
+      <p>Inicia sesión con el usuario autorizado en Supabase.</p>
+      <form id="loginForm">
+        <label>Correo<input id="loginEmail" type="email" required autocomplete="email"></label>
+        <label>Contraseña<input id="loginPassword" type="password" required autocomplete="current-password"></label>
+        <button type="submit">Entrar al panel</button>
+      </form>
+      <div id="loginMessage" class="form-message"></div>
+      <a href="index.html">← Volver a la página</a>
+    </section>
+
+    <section id="dashboard" class="dashboard hidden">
+      <header class="admin-header">
+        <div class="admin-brand"><img src="assets/logo-symbol.png" alt=""><div><b>DECOR DESIGN</b><span>Panel de administración</span></div></div>
+        <div class="admin-actions"><a href="index.html" target="_blank">Ver página</a><button id="logoutButton" class="danger-outline">Cerrar sesión</button></div>
+      </header>
+
+      <div class="stats">
+        <article><span>Categorías</span><strong id="categoriesCount">0</strong></article>
+        <article><span>Subcategorías</span><strong id="subcategoriesCount">0</strong></article><article><span>Productos</span><strong id="productsCount">0</strong></article>
+        <article><span>Proyectos</span><strong id="projectsCount">0</strong></article>
+      </div>
+
+      <nav class="tabs">
+        <button class="tab active" data-tab="categories">Categorías</button><button class="tab" data-tab="subcategories">Subcategorías</button>
+        <button class="tab" data-tab="products">Productos</button>
+        <button class="tab" data-tab="projects">Proyectos</button>
+      </nav>
+
+      <section class="tab-panel active" id="categoriesPanel">
+        <div class="panel-heading"><div><span>CATÁLOGO</span><h2>Categorías</h2></div><button class="primary-btn" data-open="categoryDialog">+ Agregar categoría</button></div>
+        <div id="categoriesTable" class="admin-list"></div>
+      </section>
+
+      <section class="tab-panel" id="subcategoriesPanel">
+        <div class="panel-heading"><div><span>CATÁLOGO</span><h2>Subcategorías</h2></div><button class="primary-btn" data-open="subcategoryDialog">+ Agregar subcategoría</button></div>
+        <div class="filters"><input id="subcategoryFilter" type="search" placeholder="Buscar subcategoría…"><select id="subcategoryCategoryFilter"><option value="">Todas las categorías</option></select></div>
+        <div id="subcategoriesTable" class="admin-list"></div>
+      </section>
+
+      <section class="tab-panel" id="productsPanel">
+        <div class="panel-heading"><div><span>CATÁLOGO</span><h2>Productos</h2></div><button class="primary-btn" data-open="productDialog">+ Agregar producto</button></div>
+        <div class="filters filters-three"><input id="productFilter" type="search" placeholder="Buscar producto…"><select id="categoryFilter"><option value="">Todas las categorías</option></select><select id="subcategoryFilterProducts"><option value="">Todas las subcategorías</option></select></div>
+        <div id="productsTable" class="admin-list"></div>
+      </section>
+
+      <section class="tab-panel" id="projectsPanel">
+        <div class="panel-heading"><div><span>PORTAFOLIO</span><h2>Proyectos</h2></div><button class="primary-btn" data-open="projectDialog">+ Agregar proyecto</button></div>
+        <div id="projectsTable" class="admin-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="categoryDialog">
+    <form id="categoryForm" class="entity-form">
+      <button type="button" class="dialog-close">×</button><h2 id="categoryFormTitle">Agregar categoría</h2>
+      <input type="hidden" id="categoryId">
+      <label>Nombre<input id="categoryName" required maxlength="80"></label>
+      <label>Descripción<textarea id="categoryDescription" rows="3"></textarea></label>
+      <label>Orden<input id="categoryOrder" type="number" value="0"></label>
+      <label class="switch-row"><input id="categoryActive" type="checkbox" checked> Mostrar en la página</label>
+      <label>Imagen<input id="categoryImage" type="file" accept="image/*"></label>
+      <div id="categoryPreview" class="image-preview"></div>
+      <button type="submit" class="primary-btn">Guardar categoría</button>
+      <div class="form-message"></div>
+    </form>
+  </dialog>
+
+  <dialog id="subcategoryDialog">
+    <form id="subcategoryForm" class="entity-form">
+      <button type="button" class="dialog-close">×</button><h2 id="subcategoryFormTitle">Agregar subcategoría</h2>
+      <input type="hidden" id="subcategoryId">
+      <label>Categoría<select id="subcategoryCategory" required></select></label>
+      <label>Nombre<input id="subcategoryName" required maxlength="100"></label>
+      <label>Descripción<textarea id="subcategoryDescription" rows="3"></textarea></label>
+      <label>Orden<input id="subcategoryOrder" type="number" value="0"></label>
+      <label class="switch-row"><input id="subcategoryActive" type="checkbox" checked> Mostrar en la página</label>
+      <label>Imagen<input id="subcategoryImage" type="file" accept="image/*"></label>
+      <div id="subcategoryPreview" class="image-preview"></div>
+      <button type="submit" class="primary-btn">Guardar subcategoría</button><div class="form-message"></div>
+    </form>
+  </dialog>
+
+  <dialog id="productDialog">
+    <form id="productForm" class="entity-form">
+      <button type="button" class="dialog-close">×</button><h2 id="productFormTitle">Agregar producto</h2>
+      <input type="hidden" id="productId">
+      <label>Categoría<select id="productCategory" required></select></label><label>Subcategoría<select id="productSubcategory"><option value="">Sin subcategoría</option></select></label>
+      <label>Nombre<input id="productName" required maxlength="120"></label>
+      <label>Descripción<textarea id="productDescription" rows="4"></textarea></label>
+      <div class="form-grid"><label>Precio MXN<input id="productPrice" type="number" step="0.01" min="0"></label><label>Orden<input id="productOrder" type="number" value="0"></label></div>
+      <label class="switch-row"><input id="productActive" type="checkbox" checked> Mostrar en la página</label>
+      <label>Imagen<input id="productImage" type="file" accept="image/*"></label>
+      <div id="productPreview" class="image-preview"></div>
+      <button type="submit" class="primary-btn">Guardar producto</button><div class="form-message"></div>
+    </form>
+  </dialog>
+
+  <dialog id="projectDialog">
+    <form id="projectForm" class="entity-form">
+      <button type="button" class="dialog-close">×</button><h2 id="projectFormTitle">Agregar proyecto</h2>
+      <input type="hidden" id="projectId">
+      <label>Título<input id="projectTitle" required maxlength="120"></label>
+      <label>Descripción<textarea id="projectDescription" rows="4"></textarea></label>
+      <label>Orden<input id="projectOrder" type="number" value="0"></label>
+      <label class="switch-row"><input id="projectActive" type="checkbox" checked> Mostrar en la página</label>
+      <label>Imagen<input id="projectImage" type="file" accept="image/*"></label>
+      <div id="projectPreview" class="image-preview"></div>
+      <button type="submit" class="primary-btn">Guardar proyecto</button><div class="form-message"></div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="admin.js"></script>
+</body>
+</html>

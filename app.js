@@ -1,46 +1,144 @@
-const cfg=window.DECOR_CONFIG;
-const sb=window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseKey);
-const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const fallbackImages=['assets/trabajo-walnut.jpg','assets/trabajo-placa-gris.jpg','assets/trabajo-marco.jpg'];
-let allProducts=[],currentCategory=null;
-const esc=(v='')=>String(v).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
-const wa=(text='Hola, quiero solicitar información de Decor Design.')=>`https://wa.me/${cfg.whatsapp}?text=${encodeURIComponent(text)}`;
-['topWhatsapp','heroWhatsapp','storyWhatsapp','ctaWhatsapp','contactWhatsapp','floatingWhatsapp'].forEach(id=>{const el=$('#'+id);if(el)el.href=wa()});
-$('#projectQuote').href=wa('Hola, vi uno de sus trabajos realizados y quiero cotizar algo similar.');
+(() => {
+  const cfg = window.DECOR_CONFIG || {};
+  const sb = supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+  const fallbackImage = "assets/hero.jpg";
+  let categories = [], subcategories = [], products = [], projects = [];
 
-const menu=$('#mainNav'),toggle=$('#menuToggle');
-toggle?.addEventListener('click',()=>{const open=menu.classList.toggle('open');toggle.setAttribute('aria-expanded',open)});
-menu?.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>menu.classList.remove('open')));
-window.addEventListener('scroll',()=>$('#siteHeader').classList.toggle('scrolled',scrollY>40));
-const observer=new IntersectionObserver(entries=>entries.forEach(e=>e.isIntersecting&&e.target.classList.add('visible')),{threshold:.14});$$('.reveal').forEach(el=>observer.observe(el));
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, m => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
+  const money = v => v === null || v === ""
+    ? "Consultar precio"
+    : new Intl.NumberFormat("es-MX",{style:"currency",currency:"MXN"}).format(Number(v));
+  const wa = text => `https://wa.me/${cfg.WHATSAPP_NUMBER || "526563420737"}?text=${encodeURIComponent(text)}`;
 
-async function loadCategories(){
- const grid=$('#categoryGrid');
- const {data,error}=await sb.from('categories').select('*').eq('active',true).order('sort_order');
- if(error){console.error(error);grid.innerHTML='<div class="empty">No se pudieron cargar las categorías.</div>';return}
- if(!data?.length){grid.innerHTML='<div class="empty">Próximamente publicaremos nuestro catálogo.</div>';return}
- grid.innerHTML=data.map((c,i)=>`<article class="category-card" data-id="${c.id}" data-name="${esc(c.name)}" data-description="${esc(c.description||'')}"><span class="category-number">${String(i+1).padStart(2,'0')}</span><img src="${esc(c.image_url||fallbackImages[i%fallbackImages.length])}" alt="${esc(c.name)}"><div class="category-info"><span class="kicker">COLECCIÓN</span><h3>${esc(c.name)}</h3><p>${esc(c.description||'')}</p><b>Ver modelos →</b></div></article>`).join('');
- grid.querySelectorAll('.category-card').forEach(card=>card.addEventListener('click',()=>openModels(card.dataset.id,card.dataset.name,card.dataset.description)));
-}
-async function openModels(categoryId,name,description){
- currentCategory={id:categoryId,name};$('#modalTitle').textContent=name;$('#modalDescription').textContent=description||'';$('#modelsGrid').innerHTML='<div class="empty">Cargando modelos…</div>';$('#modelSearch').value='';$('#modelsModal').showModal();document.body.classList.add('modal-open');
- const {data,error}=await sb.from('products').select('*').eq('category_id',categoryId).eq('active',true).order('sort_order');
- if(error){console.error(error);$('#modelsGrid').innerHTML='<div class="empty">No se pudieron cargar los modelos.</div>';return}
- allProducts=data||[];renderModels(allProducts);
-}
-function renderModels(rows){const grid=$('#modelsGrid');if(!rows.length){grid.innerHTML='<div class="empty">Todavía no hay modelos publicados en esta categoría.</div>';return}grid.innerHTML=rows.map((p,i)=>`<article class="model-card"><img src="${esc(p.image_url||fallbackImages[i%fallbackImages.length])}" alt="${esc(p.name)}"><div><h3>${esc(p.name)}</h3><p>${esc(p.description||'Solicita colores, medidas y disponibilidad.')}</p>${p.price?`<div class="price">$${Number(p.price).toLocaleString('es-MX',{minimumFractionDigits:2})}</div>`:''}<a href="${wa(`Hola, quiero información del modelo ${p.name} de la categoría ${currentCategory?.name||''}.`)}" target="_blank" rel="noopener">Pedir información</a></div></article>`).join('')}
-$('#modelSearch')?.addEventListener('input',e=>{const q=e.target.value.toLowerCase().trim();renderModels(allProducts.filter(p=>(p.name+' '+(p.description||'')).toLowerCase().includes(q)))});
-$('.models-modal .modal-close')?.addEventListener('click',()=>{$('#modelsModal').close();document.body.classList.remove('modal-open')});
+  document.querySelectorAll(".js-whatsapp").forEach(a => {
+    a.href = wa("Hola, vi la página de Decor Design y quiero solicitar una cotización.");
+    a.target = "_blank"; a.rel = "noopener";
+  });
 
-async function loadProjects(){
- const grid=$('#projectGrid');
- const {data,error}=await sb.from('projects').select('*').eq('active',true).order('sort_order');
- if(error){console.error(error);grid.innerHTML='<div class="empty">No se pudieron cargar los proyectos.</div>';return}
- const defaults=[{title:'Placa decorativa gris',description:'Instalación de placa de gran formato para un acabado moderno.',image_url:'assets/trabajo-placa-gris.jpg'},{title:'Panel Walnut y placa',description:'Combinación de madera y acabado tipo mármol.',image_url:'assets/trabajo-walnut.jpg'},{title:'Marco decorativo',description:'Diseño envolvente para resaltar el espacio principal.',image_url:'assets/trabajo-marco.jpg'}];
- const rows=data?.length?data:defaults;
- grid.innerHTML=rows.map((p,i)=>`<article class="project-card" data-title="${esc(p.title)}" data-description="${esc(p.description||'')}" data-image="${esc(p.image_url||fallbackImages[i%fallbackImages.length])}"><img src="${esc(p.image_url||fallbackImages[i%fallbackImages.length])}" alt="${esc(p.title)}"><div><h3>${esc(p.title)}</h3><p>Ver proyecto →</p></div></article>`).join('');
- grid.querySelectorAll('.project-card').forEach(card=>card.addEventListener('click',()=>{$('#projectModalImage').src=card.dataset.image;$('#projectModalTitle').textContent=card.dataset.title;$('#projectModalDescription').textContent=card.dataset.description;$('#projectModal').showModal();document.body.classList.add('modal-open')}));
-}
-$('.project-close')?.addEventListener('click',()=>{$('#projectModal').close();document.body.classList.remove('modal-open')});
-$$('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d){d.close();document.body.classList.remove('modal-open')}}));
-Promise.all([loadCategories(),loadProjects()]);
+  const menuToggle = document.getElementById("menuToggle");
+  const nav = document.getElementById("mainNav");
+  menuToggle?.addEventListener("click", () => {
+    const open = nav.classList.toggle("open");
+    menuToggle.textContent = open ? "×" : "☰";
+  });
+
+  const observer = new IntersectionObserver(entries => entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add("visible"); observer.unobserve(e.target); }
+  }), {threshold:.1});
+  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+  async function loadData(){
+    const [c,s,p,j] = await Promise.all([
+      sb.from("categories").select("*").eq("active",true).order("sort_order").order("name"),
+      sb.from("subcategories").select("*").eq("active",true).order("sort_order").order("name"),
+      sb.from("products").select("*").eq("active",true).order("sort_order").order("name"),
+      sb.from("projects").select("*").eq("active",true).order("sort_order").order("title")
+    ]);
+    if(c.error || s.error || p.error || j.error){
+      console.error(c.error,s.error,p.error,j.error);
+      document.getElementById("categoryGrid").innerHTML =
+        '<div class="empty-state">Primero ejecuta el archivo SQL de subcategorías en Supabase.</div>';
+      return;
+    }
+    categories=c.data||[]; subcategories=s.data||[]; products=p.data||[]; projects=j.data||[];
+    renderCategories(); renderProjects();
+  }
+
+  function renderCategories(){
+    const el=document.getElementById("categoryGrid");
+    if(!categories.length){el.innerHTML='<div class="empty-state">Todavía no hay categorías.</div>';return;}
+    el.innerHTML=categories.map(c=>`
+      <article class="category-card" data-id="${c.id}">
+        <img src="${c.image_url||fallbackImage}" alt="${esc(c.name)}">
+        <div class="category-card-content">
+          <h3>${esc(c.name)}</h3>
+          <p>${esc(c.description||"Conoce nuestras opciones disponibles.")}</p>
+          <span class="text-link">Ver opciones →</span>
+        </div>
+      </article>`).join("");
+    el.querySelectorAll(".category-card").forEach(card =>
+      card.addEventListener("click",()=>openCategory(card.dataset.id))
+    );
+  }
+
+  function openCategory(categoryId){
+    const category=categories.find(c=>c.id===categoryId);
+    const list=subcategories.filter(s=>s.category_id===categoryId);
+    if(!list.length){
+      openProducts(categoryId,null,category?.name||"Productos",category?.description||"");
+      return;
+    }
+    document.getElementById("subcategoryCategoryTitle").textContent=category.name;
+    document.getElementById("subcategoryCategoryDescription").textContent=category.description||"";
+    const grid=document.getElementById("subcategoriesGrid");
+    grid.innerHTML=list.map(s=>`
+      <article class="subcategory-card" data-id="${s.id}">
+        <img src="${s.image_url||category.image_url||fallbackImage}" alt="${esc(s.name)}">
+        <div><h3>${esc(s.name)}</h3><p>${esc(s.description||"Consulta productos, modelos y precios.")}</p>
+        <span class="text-link">Ver productos →</span></div>
+      </article>`).join("");
+    grid.querySelectorAll(".subcategory-card").forEach(card =>
+      card.addEventListener("click",()=>{
+        const sub=list.find(s=>s.id===card.dataset.id);
+        document.getElementById("subcategoriesModal").close();
+        openProducts(categoryId,sub.id,sub.name,sub.description||"");
+      })
+    );
+    document.getElementById("subcategoriesModal").showModal();
+  }
+
+  function openProducts(categoryId,subcategoryId,title,description){
+    const list=products.filter(p =>
+      p.category_id===categoryId &&
+      (subcategoryId ? p.subcategory_id===subcategoryId : !p.subcategory_id)
+    );
+    document.getElementById("modalCategoryTitle").textContent=title;
+    document.getElementById("modalCategoryDescription").textContent=description;
+    renderProducts(list);
+    document.getElementById("productsModal").showModal();
+    const search=document.getElementById("productSearch");
+    search.value="";
+    search.oninput=()=>{
+      const q=search.value.toLowerCase();
+      renderProducts(list.filter(p=>`${p.name} ${p.description||""}`.toLowerCase().includes(q)));
+    };
+  }
+
+  function renderProducts(list){
+    const el=document.getElementById("productsGrid");
+    if(!list.length){el.innerHTML='<div class="empty-state">No hay productos publicados aquí todavía.</div>';return;}
+    el.innerHTML=list.map(p=>`
+      <article class="model-card">
+        <img src="${p.image_url||fallbackImage}" alt="${esc(p.name)}">
+        <div><h3>${esc(p.name)}</h3><p>${esc(p.description||"")}</p>
+        <div class="price">${money(p.price)}</div>
+        <a class="text-link" target="_blank" rel="noopener"
+        href="${wa(`Hola, quiero información y cotización del producto: ${p.name}.`)}">Cotizar este producto →</a></div>
+      </article>`).join("");
+  }
+
+  function renderProjects(){
+    const el=document.getElementById("projectGrid");
+    if(!projects.length){el.innerHTML='<div class="empty-state">Todavía no hay proyectos.</div>';return;}
+    el.innerHTML=projects.map(p=>`
+      <figure class="project" data-id="${p.id}">
+        <img src="${p.image_url||fallbackImage}" alt="${esc(p.title)}">
+        <figcaption><b>${esc(p.title)}</b><span>${esc(p.description||"")}</span></figcaption>
+      </figure>`).join("");
+    el.querySelectorAll(".project").forEach(card=>card.addEventListener("click",()=>{
+      const p=projects.find(x=>x.id===card.dataset.id);
+      document.getElementById("projectModalImage").src=p.image_url||fallbackImage;
+      document.getElementById("projectModalTitle").textContent=p.title;
+      document.getElementById("projectModalDescription").textContent=p.description||"";
+      document.getElementById("projectQuote").href=wa(`Hola, quiero un proyecto parecido a: ${p.title}.`);
+      document.getElementById("projectModal").showModal();
+    }));
+  }
+
+  document.getElementById("closeSubcategoriesModal")?.addEventListener("click",()=>document.getElementById("subcategoriesModal").close());
+  document.getElementById("closeProductsModal")?.addEventListener("click",()=>document.getElementById("productsModal").close());
+  document.getElementById("closeProjectModal")?.addEventListener("click",()=>document.getElementById("projectModal").close());
+  loadData();
+})();

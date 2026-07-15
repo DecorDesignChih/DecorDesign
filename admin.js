@@ -1,25 +1,146 @@
-const cfg=window.DECOR_CONFIG,sb=window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseKey),$=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-let categories=[],products=[],projects=[];const fallback='assets/trabajo-walnut.jpg';
-const esc=(v='')=>String(v).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
-async function ensureAdmin(user){const {data,error}=await sb.from('admin_users').select('user_id').eq('user_id',user.id).maybeSingle();return !error&&!!data}
-async function init(){const {data:{session}}=await sb.auth.getSession();if(!session)return showLogin();if(!await ensureAdmin(session.user)){await sb.auth.signOut();return showLogin('Tu usuario no está autorizado como administrador.')}showAdmin(session.user);await refreshAll()}
-function showLogin(msg=''){$('#loginView').classList.remove('hidden');$('#adminView').classList.add('hidden');$('#loginMessage').textContent=msg}
-function showAdmin(user){$('#loginView').classList.add('hidden');$('#adminView').classList.remove('hidden');$('#adminEmail').textContent=user.email}
-$('#loginForm').addEventListener('submit',async e=>{e.preventDefault();$('#loginMessage').textContent='Verificando acceso…';const {data,error}=await sb.auth.signInWithPassword({email:$('#email').value.trim(),password:$('#password').value});if(error)return showLogin(error.message);if(!await ensureAdmin(data.user)){await sb.auth.signOut();return showLogin('Este usuario no está autorizado como administrador.')}showAdmin(data.user);await refreshAll()});
-$('#logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut();showLogin()});
-$$('[data-tab]').forEach(b=>b.addEventListener('click',()=>{$$('[data-tab]').forEach(x=>x.classList.remove('active'));b.classList.add('active');$$('.tab').forEach(x=>x.classList.remove('active'));$('#'+b.dataset.tab).classList.add('active');$('#pageTitle').textContent=b.textContent.trim()}));
-$$('[data-open]').forEach(b=>b.addEventListener('click',()=>openForm(b.dataset.open)));
-$$('dialog .close').forEach(b=>b.addEventListener('click',()=>b.closest('dialog').close()));
-$$('input[type=file]').forEach(input=>input.addEventListener('change',()=>{const f=input.files?.[0],preview=input.closest('form').querySelector('.image-preview');if(f){preview.src=URL.createObjectURL(f);preview.classList.add('show')}}));
-function openForm(id,row=null){const d=$('#'+id),f=d.querySelector('form'),preview=f.querySelector('.image-preview');f.reset();f.elements.id.value='';preview.classList.remove('show');preview.removeAttribute('src');if(row){Object.keys(row).forEach(k=>{if(f.elements[k]){if(f.elements[k].type==='checkbox')f.elements[k].checked=!!row[k];else f.elements[k].value=row[k]??''}});if(row.image_url){preview.src=row.image_url;preview.classList.add('show')}}else if(f.elements.active)f.elements.active.checked=true;d.showModal()}
-async function refreshAll(){const [c,p,j]=await Promise.all([sb.from('categories').select('*').order('sort_order'),sb.from('products').select('*,categories(name)').order('sort_order'),sb.from('projects').select('*').order('sort_order')]);if(c.error||p.error||j.error){console.error(c.error,p.error,j.error);toast('Error al cargar datos. Revisa la conexión o RLS.');return}categories=c.data||[];products=p.data||[];projects=j.data||[];render()}
-function render(){$('#countCategories').textContent=categories.length;$('#countProducts').textContent=products.length;$('#countProjects').textContent=projects.length;const options='<option value="">Selecciona…</option>'+categories.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');$('#productForm select[name=category_id]').innerHTML=options;$('#productCategoryFilter').innerHTML='<option value="">Todas las categorías</option>'+categories.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');applyFilters()}
-function applyFilters(){const cq=$('#categorySearch').value.toLowerCase(),pq=$('#productSearch').value.toLowerCase(),pf=$('#productCategoryFilter').value,jq=$('#projectSearch').value.toLowerCase();renderCards('#categoryAdminGrid',categories.filter(x=>(x.name+' '+(x.description||'')).toLowerCase().includes(cq)),'category');renderCards('#productAdminGrid',products.filter(x=>(!pf||x.category_id===pf)&&(x.name+' '+(x.description||'')+' '+(x.categories?.name||'')).toLowerCase().includes(pq)),'product');renderCards('#projectAdminGrid',projects.filter(x=>(x.title+' '+(x.description||'')).toLowerCase().includes(jq)),'project')}
-['categorySearch','productSearch','productCategoryFilter','projectSearch'].forEach(id=>$('#'+id).addEventListener('input',applyFilters));
-function renderCards(sel,rows,type){const grid=$(sel);if(!rows.length){grid.innerHTML='<div class="empty">No hay registros que coincidan.</div>';return}grid.innerHTML=rows.map(r=>`<article class="admin-card ${r.active?'':'inactive'}"><img src="${esc(r.image_url||fallback)}" alt=""><div class="body">${type==='product'?`<small>${esc(r.categories?.name||'Sin categoría')}</small>`:''}<h3>${esc(r.name||r.title)}</h3><p>${esc(r.description||'Sin descripción')}</p><span class="status">${r.active?'Publicado':'Oculto'}</span></div><div class="card-actions"><button data-edit="${type}" data-id="${r.id}">Editar</button><button class="delete" data-delete="${type}" data-id="${r.id}">Eliminar</button></div></article>`).join('');grid.querySelectorAll('[data-edit]').forEach(b=>b.addEventListener('click',()=>{const row=(b.dataset.edit==='category'?categories:b.dataset.edit==='product'?products:projects).find(x=>x.id===b.dataset.id);openForm(b.dataset.edit==='category'?'categoryModal':b.dataset.edit==='product'?'productModal':'projectFormModal',row)}));grid.querySelectorAll('[data-delete]').forEach(b=>b.addEventListener('click',()=>removeRow(b.dataset.delete,b.dataset.id)))}
-async function upload(file,folder){if(!file)return null;const ext=(file.name.split('.').pop()||'jpg').toLowerCase();const path=`${folder}/${crypto.randomUUID()}.${ext}`;const {error}=await sb.storage.from('decor-images').upload(path,file,{cacheControl:'3600',upsert:false});if(error)throw error;return sb.storage.from('decor-images').getPublicUrl(path).data.publicUrl}
-async function saveForm(e,table,folder,label){e.preventDefault();const f=e.currentTarget,fd=new FormData(f),id=fd.get('id'),submit=f.querySelector('button[type=submit]'),old=submit.textContent;submit.disabled=true;submit.textContent='Guardando…';try{const image=await upload(fd.get('image')?.size?fd.get('image'):null,folder);const payload={};for(const [k,v] of fd.entries()){if(['id','image'].includes(k))continue;payload[k]=v===''?null:v}payload.active=f.elements.active.checked;payload.sort_order=Number(payload.sort_order||0);if(table==='products'&&payload.price!==null)payload.price=Number(payload.price);if(image)payload.image_url=image;const {error}=id?await sb.from(table).update(payload).eq('id',id):await sb.from(table).insert(payload);if(error)throw error;f.closest('dialog').close();toast(`${label} guardado correctamente`);await refreshAll()}catch(err){console.error(err);toast('Error: '+err.message)}finally{submit.disabled=false;submit.textContent=old}}
-$('#categoryForm').addEventListener('submit',e=>saveForm(e,'categories','categories','Categoría'));$('#productForm').addEventListener('submit',e=>saveForm(e,'products','products','Producto'));$('#projectForm').addEventListener('submit',e=>saveForm(e,'projects','projects','Trabajo'));
-async function removeRow(type,id){if(!confirm('¿Seguro que deseas eliminar este registro? Esta acción no se puede deshacer.'))return;const table=type==='category'?'categories':type==='product'?'products':'projects';const {error}=await sb.from(table).delete().eq('id',id);if(error)return toast('No se pudo eliminar: '+error.message);toast('Registro eliminado');await refreshAll()}
-init();
+(() => {
+  const cfg=window.DECOR_CONFIG||{};
+  const sb=supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY);
+  const bucket=cfg.STORAGE_BUCKET||"decor-images";
+  let categories=[],subcategories=[],products=[],projects=[];
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+  const money=v=>v===null||v===""?"Sin precio":new Intl.NumberFormat("es-MX",{style:"currency",currency:"MXN"}).format(Number(v));
+  const toast=m=>{const t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2500)};
+  const message=(form,text,error=true)=>{const el=form.querySelector(".form-message");el.textContent=text;el.style.color=error?"#ffb0b0":"#a9e6b2"};
+
+  async function init(){
+    const {data:{session}}=await sb.auth.getSession();
+    if(session)await enter();
+    sb.auth.onAuthStateChange((_e,s)=>{if(!s){$("dashboard").classList.add("hidden");$("authView").classList.remove("hidden")}});
+  }
+  async function enter(){
+    const {data,error}=await sb.rpc("is_admin");
+    if(error||!data){await sb.auth.signOut();$("loginMessage").textContent="Usuario no autorizado.";return}
+    $("authView").classList.add("hidden");$("dashboard").classList.remove("hidden");await loadAll();
+  }
+  $("loginForm").addEventListener("submit",async e=>{
+    e.preventDefault();$("loginMessage").textContent="Entrando…";
+    const {error}=await sb.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});
+    if(error){$("loginMessage").textContent=error.message;return}await enter();
+  });
+  $("logoutButton").addEventListener("click",()=>sb.auth.signOut());
+
+  document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
+    document.querySelectorAll(".tab,.tab-panel").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");$(b.dataset.tab+"Panel").classList.add("active");
+  }));
+  document.querySelectorAll("[data-open]").forEach(b=>b.addEventListener("click",()=>openEmpty(b.dataset.open)));
+  document.querySelectorAll(".dialog-close").forEach(b=>b.addEventListener("click",()=>b.closest("dialog").close()));
+
+  async function loadAll(){
+    const [c,s,p,j]=await Promise.all([
+      sb.from("categories").select("*").order("sort_order").order("name"),
+      sb.from("subcategories").select("*,categories(name)").order("sort_order").order("name"),
+      sb.from("products").select("*,categories(name),subcategories(name)").order("sort_order").order("name"),
+      sb.from("projects").select("*").order("sort_order").order("title")
+    ]);
+    if(c.error||s.error||p.error||j.error){console.error(c.error,s.error,p.error,j.error);toast("Ejecuta primero el SQL nuevo.");return}
+    categories=c.data||[];subcategories=s.data||[];products=p.data||[];projects=j.data||[];
+    $("categoriesCount").textContent=categories.length;$("subcategoriesCount").textContent=subcategories.length;
+    $("productsCount").textContent=products.length;$("projectsCount").textContent=projects.length;
+    fillSelects();renderCategories();renderSubcategories();renderProducts();renderProjects();
+  }
+
+  function options(){return '<option value="">Selecciona una categoría</option>'+categories.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("")}
+  function fillSelects(){
+    $("productCategory").innerHTML=options();$("subcategoryCategory").innerHTML=options();
+    const all='<option value="">Todas las categorías</option>'+categories.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
+    $("categoryFilter").innerHTML=all;$("subcategoryCategoryFilter").innerHTML=all;
+    updateProductSubs();updateFilterSubs();
+  }
+  function updateProductSubs(selected=""){
+    const list=subcategories.filter(s=>s.category_id===$("productCategory").value);
+    $("productSubcategory").innerHTML='<option value="">Sin subcategoría</option>'+list.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("");
+    $("productSubcategory").value=selected||"";
+  }
+  function updateFilterSubs(){
+    const cat=$("categoryFilter").value;
+    const list=cat?subcategories.filter(s=>s.category_id===cat):subcategories;
+    $("subcategoryFilterProducts").innerHTML='<option value="">Todas las subcategorías</option>'+list.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("");
+  }
+  $("productCategory").addEventListener("change",()=>updateProductSubs());
+  $("categoryFilter").addEventListener("change",()=>{updateFilterSubs();renderProducts()});
+  $("subcategoryFilterProducts").addEventListener("change",renderProducts);
+  $("productFilter").addEventListener("input",renderProducts);
+  $("subcategoryFilter").addEventListener("input",renderSubcategories);
+  $("subcategoryCategoryFilter").addEventListener("change",renderSubcategories);
+
+  function row(x,type,title,desc,img,meta=""){
+    return `<article class="admin-row" data-type="${type}" data-id="${x.id}"><img src="${img||"assets/hero.jpg"}"><div><h3>${esc(title)}</h3><p>${esc(desc||"Sin descripción")}</p></div><div class="meta"><p>${esc(meta)}</p><span class="badge ${x.active?"":"off"}">${x.active?"Visible":"Oculto"}</span><p>Orden: ${x.sort_order||0}</p></div><div class="row-actions"><button class="edit">Editar</button><button class="toggle">${x.active?"Ocultar":"Mostrar"}</button><button class="delete">Eliminar</button></div></article>`;
+  }
+  function bind(){
+    document.querySelectorAll(".admin-row").forEach(r=>{
+      r.querySelector(".edit").onclick=()=>edit(r.dataset.type,r.dataset.id);
+      r.querySelector(".toggle").onclick=()=>toggle(r.dataset.type,r.dataset.id);
+      r.querySelector(".delete").onclick=()=>remove(r.dataset.type,r.dataset.id);
+    });
+  }
+  function renderCategories(){$("categoriesTable").innerHTML=categories.map(c=>row(c,"category",c.name,c.description,c.image_url)).join("")||"<p>No hay categorías.</p>";bind()}
+  function renderSubcategories(){
+    const q=$("subcategoryFilter").value.toLowerCase(),cat=$("subcategoryCategoryFilter").value;
+    const list=subcategories.filter(s=>(!cat||s.category_id===cat)&&(!q||`${s.name} ${s.description||""}`.toLowerCase().includes(q)));
+    $("subcategoriesTable").innerHTML=list.map(s=>row(s,"subcategory",s.name,s.description,s.image_url,s.categories?.name||"")).join("")||"<p>No hay subcategorías.</p>";bind()
+  }
+  function renderProducts(){
+    const q=$("productFilter").value.toLowerCase(),cat=$("categoryFilter").value,sub=$("subcategoryFilterProducts").value;
+    const list=products.filter(p=>(!cat||p.category_id===cat)&&(!sub||p.subcategory_id===sub)&&(!q||`${p.name} ${p.description||""}`.toLowerCase().includes(q)));
+    $("productsTable").innerHTML=list.map(p=>row(p,"product",p.name,p.description,p.image_url,`${p.categories?.name||""}${p.subcategories?.name?" · "+p.subcategories.name:""} · ${money(p.price)}`)).join("")||"<p>No hay productos.</p>";bind()
+  }
+  function renderProjects(){$("projectsTable").innerHTML=projects.map(p=>row(p,"project",p.title,p.description,p.image_url)).join("")||"<p>No hay proyectos.</p>";bind()}
+
+  function openEmpty(id){
+    const d=$(id),form=d.querySelector("form");form.reset();form.querySelector('input[type="hidden"]').value="";
+    d.querySelectorAll(".image-preview").forEach(x=>x.innerHTML="");
+    if(id==="categoryDialog")$("categoryActive").checked=true;
+    if(id==="subcategoryDialog")$("subcategoryActive").checked=true;
+    if(id==="productDialog"){$("productActive").checked=true;updateProductSubs()}
+    if(id==="projectDialog")$("projectActive").checked=true;
+    d.showModal();
+  }
+  function edit(type,id){
+    if(type==="category"){const x=categories.find(v=>v.id===id);$("categoryId").value=x.id;$("categoryName").value=x.name;$("categoryDescription").value=x.description||"";$("categoryOrder").value=x.sort_order||0;$("categoryActive").checked=x.active;$("categoryPreview").innerHTML=x.image_url?`<img src="${x.image_url}">`:"";$("categoryDialog").showModal()}
+    if(type==="subcategory"){const x=subcategories.find(v=>v.id===id);$("subcategoryId").value=x.id;$("subcategoryCategory").value=x.category_id;$("subcategoryName").value=x.name;$("subcategoryDescription").value=x.description||"";$("subcategoryOrder").value=x.sort_order||0;$("subcategoryActive").checked=x.active;$("subcategoryPreview").innerHTML=x.image_url?`<img src="${x.image_url}">`:"";$("subcategoryDialog").showModal()}
+    if(type==="product"){const x=products.find(v=>v.id===id);$("productId").value=x.id;$("productCategory").value=x.category_id;updateProductSubs(x.subcategory_id);$("productName").value=x.name;$("productDescription").value=x.description||"";$("productPrice").value=x.price??"";$("productOrder").value=x.sort_order||0;$("productActive").checked=x.active;$("productPreview").innerHTML=x.image_url?`<img src="${x.image_url}">`:"";$("productDialog").showModal()}
+    if(type==="project"){const x=projects.find(v=>v.id===id);$("projectId").value=x.id;$("projectTitle").value=x.title;$("projectDescription").value=x.description||"";$("projectOrder").value=x.sort_order||0;$("projectActive").checked=x.active;$("projectPreview").innerHTML=x.image_url?`<img src="${x.image_url}">`:"";$("projectDialog").showModal()}
+  }
+  async function upload(file,folder){
+    if(!file)return null;
+    if(file.size>10*1024*1024)throw new Error("La imagen supera 10 MB.");
+    const ext=(file.name.split(".").pop()||"jpg").toLowerCase(),path=`${folder}/${crypto.randomUUID()}.${ext}`;
+    const {error}=await sb.storage.from(bucket).upload(path,file,{cacheControl:"3600"});
+    if(error)throw error;
+    return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl;
+  }
+  async function save(form,table,id,payload,file,folder,dialog){
+    try{message(form,"Guardando…",false);if(file)payload.image_url=await upload(file,folder);
+      const {error}=await(id?sb.from(table).update(payload).eq("id",id):sb.from(table).insert(payload));
+      if(error)throw error;dialog.close();toast("Guardado");await loadAll()
+    }catch(e){console.error(e);message(form,e.message||"No se pudo guardar.")}
+  }
+  $("categoryForm").addEventListener("submit",e=>{e.preventDefault();save(e.currentTarget,"categories",$("categoryId").value,{name:$("categoryName").value.trim(),description:$("categoryDescription").value.trim()||null,sort_order:Number($("categoryOrder").value)||0,active:$("categoryActive").checked},$("categoryImage").files[0],"categories",$("categoryDialog"))});
+  $("subcategoryForm").addEventListener("submit",e=>{e.preventDefault();save(e.currentTarget,"subcategories",$("subcategoryId").value,{category_id:$("subcategoryCategory").value,name:$("subcategoryName").value.trim(),description:$("subcategoryDescription").value.trim()||null,sort_order:Number($("subcategoryOrder").value)||0,active:$("subcategoryActive").checked},$("subcategoryImage").files[0],"subcategories",$("subcategoryDialog"))});
+  $("productForm").addEventListener("submit",e=>{e.preventDefault();save(e.currentTarget,"products",$("productId").value,{category_id:$("productCategory").value,subcategory_id:$("productSubcategory").value||null,name:$("productName").value.trim(),description:$("productDescription").value.trim()||null,price:$("productPrice").value===""?null:Number($("productPrice").value),sort_order:Number($("productOrder").value)||0,active:$("productActive").checked},$("productImage").files[0],"products",$("productDialog"))});
+  $("projectForm").addEventListener("submit",e=>{e.preventDefault();save(e.currentTarget,"projects",$("projectId").value,{title:$("projectTitle").value.trim(),description:$("projectDescription").value.trim()||null,sort_order:Number($("projectOrder").value)||0,active:$("projectActive").checked},$("projectImage").files[0],"projects",$("projectDialog"))});
+
+  async function toggle(type,id){
+    const map={category:["categories",categories],subcategory:["subcategories",subcategories],product:["products",products],project:["projects",projects]};
+    const [table,list]=map[type],x=list.find(v=>v.id===id);const {error}=await sb.from(table).update({active:!x.active}).eq("id",id);
+    if(error)return toast("No se pudo cambiar");await loadAll()
+  }
+  async function remove(type,id){
+    const labels={category:"esta categoría y todo lo relacionado",subcategory:"esta subcategoría",product:"este producto",project:"este proyecto"};
+    if(!confirm(`¿Eliminar ${labels[type]}?`))return;
+    const table={category:"categories",subcategory:"subcategories",product:"products",project:"projects"}[type];
+    const {error}=await sb.from(table).delete().eq("id",id);if(error)return toast("No se pudo eliminar");await loadAll()
+  }
+  ["categoryImage","subcategoryImage","productImage","projectImage"].forEach(id=>$(id).addEventListener("change",e=>{
+    const file=e.target.files[0];$(id.replace("Image","Preview")).innerHTML=file?`<img src="${URL.createObjectURL(file)}">`:"";
+  }));
+  init();
+})();
