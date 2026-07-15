@@ -1,0 +1,21 @@
+DECOR DESIGN — PAQUETE FINAL CORREGIDO
+
+Se utilizó como base la página completa correcta:
+decor-design-final-sin-descuento(1).zip
+
+Después se reemplazó solamente:
+- admin.html
+- admin.css
+- admin.js
+- assets necesarios del panel móvil
+
+No se modificó:
+- index.html
+- style.css
+- app.js
+- config.js
+- archivos SQL
+- imágenes de la página principal
+- Supabase
+
+Sube todo el contenido de este ZIP a la raíz del repositorio y reemplaza los archivos existentes.
