@@ -1,0 +1,24 @@
+DECOR DESIGN — CORRECCIÓN DEFINITIVA DE IMÁGENES DEL PANEL
+
+La corrección ya no depende de la carpeta assets.
+
+Las imágenes de respaldo de:
+- Lambrín
+- Panel Walnut
+- Placas PVC
+- Vigas
+- Papel Tapiz
+- Persianas
+- Proyectos
+
+están integradas directamente en admin.js.
+
+El panel primero muestra siempre la imagen integrada.
+Solo la reemplaza por la imagen de Supabase cuando comprueba que esa imagen sí carga.
+
+REEMPLAZA ÚNICAMENTE:
+- admin.html
+- admin.js
+
+Después abre:
+https://decordesignchih.github.io/DecorDesign/admin.html?v=20260715-panel-images-embedded-final-4
