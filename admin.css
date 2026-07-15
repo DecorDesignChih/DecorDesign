@@ -38,3 +38,6 @@ body::before{
   pointer-events:none;
 }
 .auth-card{position:relative}
+
+.auth-card>img{width:150px!important;height:105px!important;object-fit:contain!important;margin-bottom:.6rem}
+.admin-brand img{width:82px!important;height:58px!important;object-fit:contain!important}
