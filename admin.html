@@ -6,7 +6,11 @@
 <title>Panel Decor Design</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Playfair+Display:wght@500;600&amp;display=swap" rel="stylesheet"/>
-<link href="admin.css?v=20260724-final" rel="stylesheet"/>
+<link href="admin.css?v=20260724-vigas2" rel="stylesheet"/>
+
+<style>
+#authView{display:block}.critical-admin-message{max-width:680px;margin:30px auto;padding:18px;background:#251b0e;color:#fff;border:1px solid #d3a251;border-radius:12px}.hidden{display:none!important}
+</style>
 </head>
 <body>
 <main class="admin-shell">
@@ -114,6 +118,10 @@
 </form>
 </dialog>
 <div class="toast" id="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js?v=20260724-final"></script><script src="admin.js?v=20260724-final"></script>
+<noscript><div class="critical-admin-message">Activa JavaScript para usar el panel.</div></noscript>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="config.js?v=20260724-vigas2"></script>
+<script defer src="admin.js?v=20260724-vigas2"></script>
+<script>window.addEventListener("load",function(){setTimeout(function(){if(!window.__ADMIN_BOOTED__){var a=document.getElementById("authView"),m=document.getElementById("loginMessage");if(a)a.classList.remove("hidden");if(m)m.textContent="El archivo admin.js no cargó. Actualiza con Ctrl + F5.";}},1800);});</script>
 </body>
 </html>

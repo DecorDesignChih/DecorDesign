@@ -647,3 +647,20 @@ main,.section,.benefits,.story,.projects-section,.contact,footer{
 .category-card-content p,.subcategory-card p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .model-card p{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;min-height:6em}
 @media(max-width:620px){.category-card img,.subcategory-card img,.model-card img{height:220px!important}.model-card p{min-height:0}}
+
+
+/* Catálogo 2026-07-24: texto separado, fotos visibles y tarjetas consistentes */
+.category-grid,.models-grid,.subcategories-grid{align-items:stretch}
+.category-card,.subcategory-card,.model-card{min-width:0}
+.category-card img,.subcategory-card img,.model-card img{background:#0f0f0f}
+.model-card{display:flex!important;flex-direction:column!important;overflow:hidden;border:1px solid rgba(255,255,255,.09);background:#151515}
+.model-card>img{display:block!important;width:100%!important;height:270px!important;object-fit:contain!important;background:#f5f2eb!important;position:static!important}
+.model-card>div{display:flex!important;flex-direction:column!important;flex:1!important;padding:1.25rem 1.25rem 1.4rem!important;position:static!important;background:#151515!important}
+.model-card h3{margin:.35rem 0 .65rem!important;font-size:1.45rem!important;line-height:1.08!important}
+.model-card p{margin:0 0 1rem!important;color:var(--muted)!important;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;line-height:1.48}
+.model-card .price{margin-top:auto;padding-top:.35rem;color:var(--gold);font-weight:800;font-size:1.28rem}
+.model-card .price.price-consult{font-size:1.05rem}
+.product-sku{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:#d3a251;font-weight:700}
+.model-card .text-link{margin-top:.5rem;display:inline-flex}
+.subcategory-card img{object-fit:contain!important;background:#f5f2eb!important}
+@media(max-width:620px){.model-card>img{height:235px!important}.model-card h3{font-size:1.3rem!important}}

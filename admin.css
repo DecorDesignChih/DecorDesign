@@ -41,3 +41,12 @@ body::before{
 
 .auth-card>img{width:150px!important;height:105px!important;object-fit:contain!important;margin-bottom:.6rem}
 .admin-brand img{width:82px!important;height:58px!important;object-fit:contain!important}
+
+
+/* Acceso robusto y mejor legibilidad móvil */
+#authView{display:block}
+#authView.hidden{display:none!important}
+.login-message{min-height:1.5em;color:#ffb0b0;white-space:pre-wrap}
+.auth-card{min-height:420px}
+.admin-row img{background:#f5f2eb;object-fit:contain}
+@media(max-width:520px){.admin-shell{padding:12px}.auth-card{margin:3vh auto;padding:1.35rem}.auth-card h1{font-size:2.25rem}.admin-row{grid-template-columns:58px 1fr}.admin-row img{width:58px;height:58px}}
