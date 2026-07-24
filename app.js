@@ -23,7 +23,11 @@
       (key.includes("lambrin") ? CATEGORY_IMAGES["lambrin"] :
        key.includes("placa") ? CATEGORY_IMAGES["placas"] :
        key.includes("persiana") ? CATEGORY_IMAGES["persianas"] :
-       key.includes("tapiz") ? CATEGORY_IMAGES["papel tapiz"] :
+       key.includes("tapiz") ? CATEGORY_IMAGES["tapiz"] :
+       key.includes("piso") ? CATEGORY_IMAGES["pisos"] :
+       key.includes("deck") ? CATEGORY_IMAGES["deck"] :
+       key.includes("pasto") ? CATEGORY_IMAGES["pasto sintetico"] :
+       key.includes("accesorio") ? CATEGORY_IMAGES["accesorios para muros"] :
        key.includes("viga") ? CATEGORY_IMAGES["vigas"] :
        CATEGORY_IMAGES["decor"]);
   };
